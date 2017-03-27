@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_created_boards_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:baselineAligned="false"
+    tools:context="com.example.dan_p.nonogrammaker.activities.BoardCreateMenuActivity">
+
+    <TextView
+        android:text="Board creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:gravity="top" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createboardlist_top_buttons"
+        android:layout_below="@+id/textView3">
+
+        <TextView
+            android:text="Select a board to edit:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_viewcreateboardlist"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/createboardlist_listview"
+        android:layout_below="@+id/createboardlist_top_buttons"
+        android:layout_height="400dp"
+        android:layout_centerVertical="true" />
+
+    <Button
+        android:text="Create a new board"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_create_new_board"
+        android:layout_weight="1"
+        android:layout_below="@+id/createboardlist_listview" />
+
+</RelativeLayout>

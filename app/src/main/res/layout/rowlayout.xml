@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:background="@drawable/menuradiobutton"
+    android:layout_margin="5dp"
+    android:gravity="center">
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:columnCount="2"
+        android:padding="5dp">
+
+        <ImageView
+            app:srcCompat="@color/colorAccent"
+            android:id="@+id/row_imageview0"
+            android:layout_weight="0"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:padding="1dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageView
+            app:srcCompat="@color/colorAccent"
+            android:id="@+id/row_imageview1"
+            android:layout_weight="0"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:padding="1dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageView
+            app:srcCompat="@color/colorAccent"
+            android:id="@+id/row_imageview2"
+            android:layout_weight="0"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:padding="1dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageView
+            app:srcCompat="@color/colorAccent"
+            android:id="@+id/row_imageview3"
+            android:layout_weight="0"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:padding="1dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+    </GridLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_row_creator"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_row_tag"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_row_bestTime"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp" />
+    </LinearLayout>
+
+</LinearLayout>

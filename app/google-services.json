@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1019116724515",
+    "firebase_url": "https://nonogrammaker-6c169.firebaseio.com",
+    "project_id": "nonogrammaker-6c169",
+    "storage_bucket": "nonogrammaker-6c169.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019116724515:android:ffd2ea8d990cbb29",
+        "android_client_info": {
+          "package_name": "com.example.dan_p.nonogrammaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019116724515-a9ksvk4ofkslmo0euo7gdbduaejvc6vv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dan_p.nonogrammaker",
+            "certificate_hash": "a3840b4486df1d3be084b1cb02060546ffb7be11"
+          }
+        },
+        {
+          "client_id": "1019116724515-47c4abq7mgnvu7ith0mmn111ciit3ujq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXnshq5ccfs0JaLDXoQ2LnfVp8SB3x1f0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019116724515-47c4abq7mgnvu7ith0mmn111ciit3ujq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
