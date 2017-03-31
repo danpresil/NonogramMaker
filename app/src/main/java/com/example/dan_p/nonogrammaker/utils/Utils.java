@@ -9,13 +9,22 @@ public class Utils {
     }
 
     public static int[] parseStringToIntegerArray(String string) {
-        int[] integerArray = new int[string.length()];
-        char[] charArray = string.toCharArray();
+//        if (string != null) {
+            int[] integerArray = new int[string.length()];
+            char[] charArray = string.toCharArray();
 
-        for (int i = 0 ; i < integerArray.length ; i++)
-            integerArray[i] = Integer.parseInt(String.valueOf(charArray[i]));
+            for (int i = 0 ; i < integerArray.length ; i++)
+                integerArray[i] = Integer.parseInt(String.valueOf(charArray[i]));
 
-        return integerArray;
+            return integerArray;
+//        }
+//        else {
+//            int[] integerArray = new int[225];
+//            for (int i = 0 ; i < integerArray.length ; i++)
+//                integerArray[i] = 0;
+//
+//            return integerArray;
+//        }
     }
 
     public static String integerArrayToString(int[] array) {

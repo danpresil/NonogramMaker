@@ -55,9 +55,21 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
                 TextView textViewTag = (TextView) v.findViewById(R.id.textView_row_tag);
                 textViewTag.setText(String.format("#%s", model.getTag()));
                 try {
-                    GameBoard gameBoard = new GameBoard(model.getCells());
-                    ImageView imageView = (ImageView) v.findViewById(R.id.row_imageview0);
-                    imageView.setImageBitmap(gameBoard.createImage());
+                    GameBoard gameBoard0 = new GameBoard(model.getCells0());
+                    ImageView imageView0 = (ImageView) v.findViewById(R.id.row_imageview0);
+                    imageView0.setImageBitmap(gameBoard0.createImage());
+
+                    GameBoard gameBoard1 = new GameBoard(model.getCells1());
+                    ImageView imageView1 = (ImageView) v.findViewById(R.id.row_imageview1);
+                    imageView1.setImageBitmap(gameBoard1.createImage());
+
+                    GameBoard gameBoard2 = new GameBoard(model.getCells2());
+                    ImageView imageView2 = (ImageView) v.findViewById(R.id.row_imageview2);
+                    imageView2.setImageBitmap(gameBoard2.createImage());
+
+                    GameBoard gameBoard3 = new GameBoard(model.getCells3());
+                    ImageView imageView3 = (ImageView) v.findViewById(R.id.row_imageview3);
+                    imageView3.setImageBitmap(gameBoard3.createImage());
                 } catch (BoardSizeException e) {
                     e.printStackTrace();
                 }
@@ -67,7 +79,7 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Toast.makeText(BoardCreateMenuActivity.this, "Clicked on: " + position +
                                 model.getTag(), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(BoardCreateMenuActivity.this, BoardCreateActivity.class);
+                        Intent intent = new Intent(BoardCreateMenuActivity.this, BoardCreateSelectActivity.class);
                         intent.putExtra("board", model);
                         intent.putExtra("key", firebaseListAdapterMyPuzzles.getRef(position).getKey());
                         startActivity(intent);
@@ -86,13 +98,14 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
                 String tag = "new";
                 String creator = firebaseUser.getUid();
                 String creator_email = firebaseUser.getEmail();
-                BoardEntry g = new BoardEntry(emptyBoard, tag, creator, creator_email);
+                BoardEntry newBoard = new BoardEntry(emptyBoard, emptyBoard, emptyBoard, emptyBoard
+                        , tag, creator, creator_email);
 
                 // The key to the new empty board
-                String key = writeNewBoard(emptyBoard, tag, creator, creator_email);
+                String key = writeNewBoard(emptyBoard, emptyBoard, emptyBoard, emptyBoard, tag, creator, creator_email);
 
-                Intent intent = new Intent(BoardCreateMenuActivity.this, BoardCreateActivity.class);
-                intent.putExtra("board", g);
+                Intent intent = new Intent(BoardCreateMenuActivity.this, BoardCreateSelectActivity.class);
+                intent.putExtra("board", newBoard);
                 intent.putExtra("key", key);
 
                 // The user can edit the empty board in the following intent
@@ -102,9 +115,10 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
     }
 
     /** returns the board key */
-    private String writeNewBoard(String cells, String tag, String creatorId, String creatorEmail) {
+    private String writeNewBoard(String cells0, String cells1, String cells2, String cells3, String tag, String creatorId, String creatorEmail) {
+        // Generate a new key for the new board
         String key = mRootRef.child("user_boards").child(creatorId).push().getKey();
-        BoardEntry boardEntry = new BoardEntry(cells, tag, creatorId, creatorEmail);
+        BoardEntry boardEntry = new BoardEntry(cells0, cells1, cells2, cells3, tag, creatorId, creatorEmail);
         Map<String, Object> gameBoardDataValues = boardEntry.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

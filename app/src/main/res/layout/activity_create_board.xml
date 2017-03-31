@@ -10,56 +10,70 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.dan_p.nonogrammaker.activities.BoardCreateActivity"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:background="@drawable/background111">
+
+    <TextView
+        android:fontFamily="sans-serif-condensed"
+        android:text="Board editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:layout_marginBottom="10dp"
+        android:textAlignment="center"
+        android:textSize="55sp"
+        android:layout_alignParentTop="false"
+        android:textColor="@color/bodyTextColor" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/linear0"
+        android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:text="#"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textAlignment="viewEnd" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editText_tag"
+            android:hint="tag"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="10dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false">
-
-        <TextView
-            android:text="Board editor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6"
-            android:layout_marginBottom="10dp"
-            android:textAlignment="center" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:text="#"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView7"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/editText_tag"
-                android:hint="tag"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingStart="10dp"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:layout_width="match_parent" />
-
-        </LinearLayout>
+        android:background="#4DFFFFFF"
+        android:id="@+id/linear1"
+        android:layout_below="@+id/linear0"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <GridLayout
             android:columnCount="15"
             android:rowCount="15"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/create_board_grid"
             android:useDefaultMargins="false"
@@ -1423,23 +1437,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/create_board_grid"
             android:layout_weight="1">
-
-            <Button
-                android:text="Upload"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_upload_board"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
-
-            <Button
-                android:text="Delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_delete"
-                android:textColor="@color/colorValue3"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp" />
 
         </LinearLayout>
     </LinearLayout>

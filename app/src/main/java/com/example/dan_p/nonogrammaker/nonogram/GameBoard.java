@@ -146,7 +146,7 @@ public class GameBoard {
         return image;
     }
 
-    public Bitmap createImage() { //TODO set private
+    public Bitmap createImage() {
         int width = getSize();
         int height = getSize();
         int[] pixels = new int[width * height];

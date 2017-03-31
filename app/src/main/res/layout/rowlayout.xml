@@ -22,9 +22,8 @@
             android:layout_weight="0"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
-            android:padding="1dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
 
         <ImageView
             app:srcCompat="@color/colorAccent"
@@ -32,9 +31,8 @@
             android:layout_weight="0"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
-            android:padding="1dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
 
         <ImageView
             app:srcCompat="@color/colorAccent"
@@ -42,9 +40,8 @@
             android:layout_weight="0"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
-            android:padding="1dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
 
         <ImageView
             app:srcCompat="@color/colorAccent"
@@ -52,9 +49,8 @@
             android:layout_weight="0"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
-            android:padding="1dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
 
     </GridLayout>
 

@@ -30,14 +30,13 @@ public class BoardCreateActivity extends AppCompatActivity implements View.OnCli
     private GridLayout gameGrid;
     private GameBoard gameBoard;
     private CellImage[][] cellImages;
-    private Button buttonUploadBoard;
-    private EditText editTextTag;
-    private Button buttonDelete;
-    private boolean deleted = false;
 
+    private EditText editTextTag;
+    private int position;
     private String boardKey;
-    private String boardCreatorId;
-    private String boardCreatorEmail;
+//    private String boardCreatorId;
+//    private String boardCreatorEmail;
+    private BoardEntry boardEntry;
 
     private DatabaseReference mRootRef;
 
@@ -49,67 +48,69 @@ public class BoardCreateActivity extends AppCompatActivity implements View.OnCli
 
         this.mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl(Constants.FIREBASE_URL);
 
-        String boardCells0 = "";
-
         BoardEntry boardEntry = getIntent().getExtras().getParcelable("board");
         if (boardEntry != null) {
-            boardCells0 = boardEntry.getCells();
-            this.boardCreatorId = boardEntry.getCreatorId();
-            this.boardCreatorEmail = boardEntry.getCreatorEmail();
-            this.editTextTag.setText(boardEntry.getTag());
+            this.boardEntry = boardEntry;
+//            boardCells0 = boardEntry.getCells();
+//            this.boardCreatorId = boardEntry.getCreatorId();
+//            this.boardCreatorEmail = boardEntry.getCreatorEmail();
+            this.editTextTag.setText(this.boardEntry.getTag());
+//            this.position = boardEntry.getPositon();
         }
+        else {
+            finish();
+        }
+
+        this.position = getIntent().getIntExtra("position", -1);
 
         String key = getIntent().getStringExtra("key");
         if (key != null)
             this.boardKey = key;
 
         try {
-            this.gameBoard = new GameBoard(boardCells0);
+            switch (this.position) {
+                case 0:
+                    if (boardEntry.getCells0() == null)
+                        this.gameBoard = new GameBoard(GameBoard.makeAnEmptyBoard(SIZE));
+                    else
+                        this.gameBoard = new GameBoard(boardEntry.getCells0());
+                    break;
+                case 1:
+                    if (boardEntry.getCells1() == null)
+                        this.gameBoard = new GameBoard(GameBoard.makeAnEmptyBoard(SIZE));
+                    else
+                        this.gameBoard = new GameBoard(boardEntry.getCells1());
+                    break;
+                case 2:
+                    if (boardEntry.getCells2() == null)
+                        this.gameBoard = new GameBoard(GameBoard.makeAnEmptyBoard(SIZE));
+                    else
+                        this.gameBoard = new GameBoard(boardEntry.getCells2());
+                    break;
+                case 3:
+                    if (boardEntry.getCells3() == null)
+                        this.gameBoard = new GameBoard(GameBoard.makeAnEmptyBoard(SIZE));
+                    else
+                        this.gameBoard = new GameBoard(boardEntry.getCells3());
+                    break;
+                default:
+                    finish();
+            }
+
         } catch (BoardSizeException e) {
             e.printStackTrace();
         }
 
         cellImages = getImageCellsFromView();
         updateCells();
-        setActionListeners();
+        //setActionListeners();
     }
 
     private void findViewsById() {
         this.gameGrid = (GridLayout)findViewById(R.id.create_board_grid);
-        this.buttonUploadBoard = (Button) findViewById(R.id.button_upload_board);
+
         this.editTextTag = (EditText) findViewById(R.id.editText_tag);
-        this.buttonDelete = (Button) findViewById(R.id.button_delete);
-    }
 
-    private void setActionListeners() {
-        this.buttonUploadBoard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(BoardCreateActivity.this)
-                    .setTitle("Upload board")
-                    .setMessage("You can't edit a board after you uploading it.\n" +
-                            "Are you sure you want to upload this board?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            uploadBoard();
-                        }})
-                    .setNegativeButton(android.R.string.no, null).show();
-            }
-        });
-
-        this.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(BoardCreateActivity.this)
-                    .setTitle("Delete board")
-                    .setMessage("Are you sure you want to delete this board?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            deleteBoard();
-                        }})
-                    .setNegativeButton(android.R.string.no, null).show();
-            }
-        });
     }
 
     private CellImage[][] getImageCellsFromView() {
@@ -153,41 +154,19 @@ public class BoardCreateActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onPause() {
         super.onPause();
-        if (!deleted)
-            saveBoard(); // Save board on pause
+        saveBoard(); // Save board on pause
     }
 
     private void saveBoard() {
         // update cells + tag by key
         if (this.boardKey != null) {
-            mRootRef.child("user_boards").child(this.boardCreatorId).child(boardKey)
-                    .child("cells").setValue(this.gameBoard.getCellsAsString());
+            mRootRef.child("user_boards").child(this.boardEntry.getCreatorId()).child(boardKey)
+                    .child("cells"+position).setValue(this.gameBoard.getCellsAsString());
 
-            mRootRef.child("user_boards").child(this.boardCreatorId).child(boardKey)
+            mRootRef.child("user_boards").child(this.boardEntry.getCreatorId()).child(boardKey)
                     .child("tag").setValue(this.editTextTag.getText().toString());
         }
     }
 
-    private void uploadBoard() {
-        String key = mRootRef.child("boards").push().getKey();
-        BoardEntry boardEntry = new BoardEntry(
-                gameBoard.getCellsAsString(),
-                editTextTag.getText().toString(), boardCreatorId, boardCreatorEmail);
-        Map<String, Object> gameBoardDataValues = boardEntry.toMap();
 
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/boards/" + key, gameBoardDataValues);
-
-        mRootRef.updateChildren(childUpdates);
-
-        deleteBoard();
-    }
-
-    private void deleteBoard() {
-        if (this.boardKey != null) {
-            mRootRef.child("user_boards").child(this.boardCreatorId).child(boardKey).removeValue();
-            deleted = true;
-            finish();
-        }
-    }
 }

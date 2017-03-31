@@ -1,6 +1,8 @@
 package com.example.dan_p.nonogrammaker.activities;
 
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.widget.GridLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dan_p.nonogrammaker.R;
 import com.example.dan_p.nonogrammaker.database.Constants;
@@ -23,12 +26,14 @@ import com.example.dan_p.nonogrammaker.nonogram.CellState;
 import com.example.dan_p.nonogrammaker.nonogram.GameBoard;
 import com.example.dan_p.nonogrammaker.nonogram.GameLogic;
 import com.example.dan_p.nonogrammaker.nonogram.GameState;
+import com.example.dan_p.nonogrammaker.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
@@ -49,14 +54,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private CellImage touchedCellImage;
     private CellImage clickedOnCellImage;
-    private String boardCreatorId;
     private String boardKey;
-    private String boardCreatorEmail;
-    private boolean isSolved;
+    private String isSolved;
 
     private DatabaseReference mRootRef;
     private FirebaseUser firebaseUser;
     private int startTime;
+    private int position;
+
+    private HashMap<String, Integer> cellRecourceMap;
 
 
     @Override
@@ -64,6 +70,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_15x15);
         gameActivity = this;
+
+        cellRecourceMap = createCellResourcesMap();
 
         this.mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl(Constants.FIREBASE_URL);
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -76,12 +84,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         this.startTime = gameLogic.getTime();
         this.timer = new Thread(new GameTimer());
         this.timer.start();
-        if (this.isSolved) {
-            this.textViewBestTime.setText("Your best time is : " + this.startTime);
-        } else {
+//        if (this.isSolved) {
+//            this.textViewBestTime.setText("Your best time is : " + this.startTime);
+//        } else {
             //timer.start();
             this.textViewBestTime.setText("Time : " + this.startTime);
-        }
+      //  }
         updateCellImages();
     }
 
@@ -103,10 +111,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private GameLogic createGameLogic() {
         BoardEntry boardEntry = getIntent().getExtras().getParcelable("board");
         String cells = "";
+        this.position = getIntent().getIntExtra("position", -1);
         if (boardEntry != null) {
-            cells = boardEntry.getCells(); //TODO switch by placement
-            this.boardCreatorId = boardEntry.getCreatorId();
-            this.boardCreatorEmail = boardEntry.getCreatorEmail();
+            switch (position) {
+                case 0:
+                    cells = boardEntry.getCells0();
+                    break;
+                case 1:
+                    cells = boardEntry.getCells1();
+                    break;
+                case 2:
+                    cells = boardEntry.getCells2();
+                    break;
+                case 3:
+                    cells = boardEntry.getCells3();
+                    break;
+                default:
+                    Toast.makeText(gameActivity,
+                            "Failed to load position", Toast.LENGTH_SHORT).show();
+                    finish();
+            }
         }
 
         String key = getIntent().getStringExtra("key");
@@ -117,14 +141,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         int time = getIntent().getIntExtra("time", 0);
         String progress = getIntent().getStringExtra("progress");
-        this.isSolved = getIntent().getBooleanExtra("solved", false);
+        this.isSolved = getIntent().getStringExtra("solved");
+        if (this.isSolved == null) {
+            this.isSolved = "0000";
+        }
 
         //TODO get sloved intent
 
         GameLogic gameLogic = null;
         try {
             GameBoard gameBoard = new GameBoard(cells);
-            if (!this.isSolved && progress != null) {
+            if (this.isSolved != null && this.isSolved.charAt(position) == '0' && progress != null) {
                 // Continue game using the solution progress
                 gameLogic = new GameLogic(gameBoard, new GameBoard(progress), time);
             } else {
@@ -223,13 +250,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             columnStringBuilder.deleteCharAt(columnStringBuilder.length()-1);
             this.columnTextViews[column].setText(columnStringBuilder.toString());
 
-            //TODO if list size > 5, change text size
-            if (columnsArrayLists.length > 5)
+            if (this.columnTextViews[column].length() < 8)
                 this.columnTextViews[column].setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        getResources().getDimension(R.dimen.small_size_hint_font));
-            else
+                        getResources().getDimension(R.dimen.large_size_hint_font));
+            else if (this.columnTextViews[column].length() > 8 &&
+                    this.columnTextViews[column].length() < 11)
                 this.columnTextViews[column].setTextSize(TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.medium_size_hint_font));
+            else
+                this.columnTextViews[column].setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimension(R.dimen.small_size_hint_font));
         }
 
         ArrayList<Integer>[] rowsArrayLists = this.gameLogic.getRowNumberListsArray();
@@ -240,16 +270,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             rowStringBuilder.deleteCharAt(rowStringBuilder.length()-1);
             this.rowTextViews[row].setText(rowStringBuilder.toString());
 
-            if (rowsArrayLists.length > 5)
+            if (this.rowTextViews[row].length() < 9)
                 this.rowTextViews[row].setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        getResources().getDimension(R.dimen.small_size_hint_font));
-            else
+                        getResources().getDimension(R.dimen.large_size_hint_font));
+            else if (this.rowTextViews[row].length() > 9 && this.rowTextViews[row].length() < 11)
                 this.rowTextViews[row].setTextSize(TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.medium_size_hint_font));
+            else
+                this.rowTextViews[row].setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimension(R.dimen.small_size_hint_font));
         }
     }
 
     private void updateCellImages() {
+        int res = 0;
         for (int row = 0 ; row < this.gameLogic.getSize() ; row++ ) {
             for (int column = 0 ; column < this.gameLogic.getSize() ; column++ ) {
                 CellImage cellImage = cellImages[row][column];
@@ -257,24 +291,77 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 switch (cell.getCellState()) {
                     case WHITE:
-                        cellImage.setImageResource(R.drawable.cell0);
+                        res = getCellResource(CellState.WHITE, row, column);
+                        cellImage.setImageResource(res);
                         break;
                     case BLACK:
-                        //TODO int res = getResources().getIdentifier("com.example.dap_p.nonogrammaker:drawable/cellminebackground", null, null);
-                        cellImage.setImageResource(R.drawable.cell1);
+                        res = getCellResource(CellState.BLACK, row, column);
+                        cellImage.setImageResource(res);
                         break;
                     case X:
-                        cellImage.setImageResource(R.drawable.cell2);
+                        res = getCellResource(CellState.X, row, column);
+                        cellImage.setImageResource(res);
                         break;
                 }
             }
         }
     }
 
+    private void updateCellImage(int row, int column) {
+        int res = 0;
+        CellImage cellImage = cellImages[row][column];
+        Cell cell = (this.gameLogic.getGameGrid().getCells())[row][column];
+
+        switch (cell.getCellState()) {
+            case WHITE:
+                res = getCellResource(CellState.WHITE, row, column);
+                cellImage.setImageResource(res);
+                break;
+            case BLACK:
+                res = getCellResource(CellState.BLACK, row, column);
+                cellImage.setImageResource(res);
+                break;
+            case X:
+                res = getCellResource(CellState.X, row, column);
+                cellImage.setImageResource(res);
+                break;
+        }
+    }
+
+    private int getCellResource(CellState state, int y, int x) {
+        String statePrefix = "";
+        switch (state) {
+            case WHITE:
+                statePrefix = "cell0";
+                break;
+            case BLACK:
+                statePrefix = "cell1";
+                break;
+            case X:
+                statePrefix = "cell2";
+                break;
+        }
+
+        String xIndex = "";
+        if (x%5 == 0)
+            xIndex = "x0";
+        else if (x%5 == 4)
+            xIndex = "x4";
+
+        String yIndex = "";
+        if (y%5 == 0)
+            yIndex = "y0";
+        else if (y%5 == 4)
+            yIndex = "y4";
+
+        String imageId = String.format("%s%s%s", statePrefix, xIndex, yIndex);
+        return this.cellRecourceMap.get(imageId);
+    }
+
     private void checkWin() {
         if (gameLogic.getGameState() == GameState.WON) {
             PlayEndGameAnimation(GameState.WON);
-            this.isSolved = true;
+            this.isSolved = Utils.replaceChar(this.isSolved, position, '1');
 
             // Disable grid clicks
             for (int row = 0 ; row < this.gameLogic.getSize() ; row++ )
@@ -303,16 +390,34 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (this.boardKey != null) {
             // Solution progress
             mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
-                    .child("progress").setValue(this.gameLogic.getGameGrid().getCellsAsString());
-
+                    .child("progress"+position).setValue(this.gameLogic.getGameGrid().getCellsAsString());
+            Toast.makeText(gameActivity, "pos="+position, Toast.LENGTH_SHORT).show();
 //            if (!isSolved) {
-                // Game time
-                mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
-                        .child("time").setValue(this.gameLogic.getTime());
+            // Game time
+            mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
+                    .child("time").setValue(this.gameLogic.getTime());
 
-                // Game status: in progress / solved
-                mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
-                        .child("solved").setValue(isSolved);
+            // Game status: in progress / solved
+            mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
+                    .child("solved").setValue(isSolved);
+
+//            }
+
+            ///////
+
+
+//            // Solution progress
+//            mRootRef.child("boards").child(boardKey).child("progression").child(firebaseUser.getUid())
+//                    .child("progress"+position).setValue(this.gameLogic.getGameGrid().getCellsAsString());
+//            Toast.makeText(gameActivity, "pos="+position, Toast.LENGTH_SHORT).show();
+////            if (!isSolved) {
+//            // Game time
+//            mRootRef.child("boards").child(boardKey).child("progression").child(firebaseUser.getUid())
+//                    .child("time").setValue(this.gameLogic.getTime());
+//
+//            // Game status: in progress / solved
+//            mRootRef.child("boards").child(boardKey).child("progression").child(firebaseUser.getUid())
+//                    .child("solved").setValue(isSolved);
 
 //            }
         }
@@ -321,29 +426,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (v instanceof CellImage) {
-            this.touchedCellImage = (CellImage)v;
-            this.touchedCellImage.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (v instanceof CellImage) {
-                        CellImage cellImage = (CellImage) v;
-                        int row = cellImage.getRow();
-                        int column = cellImage.getColumn();
+            CellImage cellImage = (CellImage) v;
+            int row = cellImage.getRow();
+            int column = cellImage.getColumn();
 
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                rowTextViews[row].setBackgroundColor(Color.RED);
-                                columnTextViews[column].setBackgroundColor(Color.RED);
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                rowTextViews[row].setBackgroundColor(Color.WHITE);
-                                columnTextViews[column].setBackgroundColor(Color.WHITE);
-                                break;
-                        }
-                    }
-                    return false;
-                }
-            });
+            int highlightImageId = cellRecourceMap.get("highlight");
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    //rowTextViews[row].setBackgroundColor(Color.RED);
+                    //columnTextViews[column].setBackgroundColor(Color.RED);
+                    for (int r = 0 ; r < gameLogic.getSize() ; r++)
+                        cellImages[r][column].setColorFilter(Color.parseColor("#4DFFFFFF"), PorterDuff.Mode.SRC_ATOP);
+
+                    for (int c = 0 ; c < gameLogic.getSize() ; c++)
+                        cellImages[row][c].setColorFilter(Color.parseColor("#4DFFFFFF"), PorterDuff.Mode.SRC_ATOP);
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    //rowTextViews[row].setBackgroundColor(0x00000000);
+                    //columnTextViews[column].setBackgroundColor(0x00000000);
+                    updateCellImage(row, column);
+
+                    for (int r = 0 ; r < gameLogic.getSize() ; r++)
+                        cellImages[r][column].setColorFilter(null);
+
+                    for (int c = 0 ; c < gameLogic.getSize() ; c++)
+                        cellImages[row][c].setColorFilter(null);
+                    break;
+            }
         }
         return false;
     }
@@ -360,7 +471,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     gameLogic.makeMove(CellState.X, clickedOnCellImage.getRow(), clickedOnCellImage.getColumn());
                     break;
             }
-            updateCellImages();
+            updateCellImage(clickedOnCellImage.getRow(), clickedOnCellImage.getColumn());
             checkWin();
         }
 
@@ -383,6 +494,40 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+    }
+
+    private HashMap<String, Integer> createCellResourcesMap() {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        map.put("cell0",getResources().getIdentifier("cell0", "drawable", getPackageName()));
+        map.put("cell0x0",getResources().getIdentifier("cell0x0", "drawable", getPackageName()));
+        map.put("cell0x0y0",getResources().getIdentifier("cell0x0y0", "drawable", getPackageName()));
+        map.put("cell0x0y4",getResources().getIdentifier("cell0x0y4", "drawable", getPackageName()));
+        map.put("cell0x4",getResources().getIdentifier("cell0x4", "drawable", getPackageName()));
+        map.put("cell0x4y0",getResources().getIdentifier("cell0x4y0", "drawable", getPackageName()));
+        map.put("cell0x4y4",getResources().getIdentifier("cell0x4y4", "drawable", getPackageName()));
+        map.put("cell0y0",getResources().getIdentifier("cell0y0", "drawable", getPackageName()));
+        map.put("cell0y4",getResources().getIdentifier("cell0y4", "drawable", getPackageName()));
+        map.put("cell1",getResources().getIdentifier("cell1", "drawable", getPackageName()));
+        map.put("cell1x0",getResources().getIdentifier("cell1x0", "drawable", getPackageName()));
+        map.put("cell1x0y0",getResources().getIdentifier("cell1x0y0", "drawable", getPackageName()));
+        map.put("cell1x0y4",getResources().getIdentifier("cell1x0y4", "drawable", getPackageName()));
+        map.put("cell1x4",getResources().getIdentifier("cell1x4", "drawable", getPackageName()));
+        map.put("cell1x4y0",getResources().getIdentifier("cell1x4y0", "drawable", getPackageName()));
+        map.put("cell1x4y4",getResources().getIdentifier("cell1x4y4", "drawable", getPackageName()));
+        map.put("cell1y0",getResources().getIdentifier("cell1y0", "drawable", getPackageName()));
+        map.put("cell1y4",getResources().getIdentifier("cell1y4", "drawable", getPackageName()));
+        map.put("cell2",getResources().getIdentifier("cell2", "drawable", getPackageName()));
+        map.put("cell2x0",getResources().getIdentifier("cell2x0", "drawable", getPackageName()));
+        map.put("cell2x0y0",getResources().getIdentifier("cell2x0y0", "drawable", getPackageName()));
+        map.put("cell2x0y4",getResources().getIdentifier("cell2x0y4", "drawable", getPackageName()));
+        map.put("cell2x4",getResources().getIdentifier("cell2x4", "drawable", getPackageName()));
+        map.put("cell2x4y0",getResources().getIdentifier("cell2x4y0", "drawable", getPackageName()));
+        map.put("cell2x4y4",getResources().getIdentifier("cell2x4y4", "drawable", getPackageName()));
+        map.put("cell2y0",getResources().getIdentifier("cell2y0", "drawable", getPackageName()));
+        map.put("cell2y4",getResources().getIdentifier("cell2y4", "drawable", getPackageName()));
+        map.put("highlight",getResources().getIdentifier("highlight", "drawable", getPackageName()));
+        return map;
     }
 
 }

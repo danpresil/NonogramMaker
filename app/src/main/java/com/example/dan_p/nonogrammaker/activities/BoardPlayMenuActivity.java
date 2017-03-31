@@ -55,12 +55,49 @@ public class BoardPlayMenuActivity extends AppCompatActivity {
                 TextView textViewTag = (TextView) v.findViewById(R.id.textView_row_tag);
                 textViewTag.setText(String.format("#%s", model.getTag()));
                 try {
-                    GameBoard gameBoard = new GameBoard(model.getCells());
-                    ImageView imageView = (ImageView) v.findViewById(R.id.row_imageview0);
-                    imageView.setImageBitmap(gameBoard.createImage());
+                    GameBoard gameBoard0 = new GameBoard(model.getCells0());
+                    ImageView imageView0 = (ImageView) v.findViewById(R.id.row_imageview0);
+                    imageView0.setImageBitmap(gameBoard0.createImage());
+
+                    GameBoard gameBoard1 = new GameBoard(model.getCells1());
+                    ImageView imageView1 = (ImageView) v.findViewById(R.id.row_imageview1);
+                    imageView1.setImageBitmap(gameBoard1.createImage());
+
+                    GameBoard gameBoard2 = new GameBoard(model.getCells2());
+                    ImageView imageView2 = (ImageView) v.findViewById(R.id.row_imageview2);
+                    imageView2.setImageBitmap(gameBoard2.createImage());
+
+                    GameBoard gameBoard3 = new GameBoard(model.getCells3());
+                    ImageView imageView3 = (ImageView) v.findViewById(R.id.row_imageview3);
+                    imageView3.setImageBitmap(gameBoard3.createImage());
                 } catch (BoardSizeException e) {
                     e.printStackTrace();
                 }
+
+
+//                boardKey = firebaseListAdapter.getRef(position).getKey();
+//                mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
+//                        .addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                //Intent intent = new Intent(BoardPlayMenuActivity.this, BoardPlaySelectActivity.class);
+////                                ImageView imageView3 = (ImageView) findViewById(R.id.row_imageview3);
+////                                imageView3.setImageResource(R.drawable.questionmarkblue);
+//                                //intent.putExtra("board", model);
+//                                //intent.putExtra("key", boardKey);
+////                                if (dataSnapshot.child("time") != null )
+////                                    intent.putExtra("time",
+////                                            dataSnapshot.child("time").getValue(Integer.class));
+//                                String solved = "0000";
+//                                if (dataSnapshot.child("solved") != null)
+//                                    solved = dataSnapshot.child("solved").getValue(String.class);
+//
+//                            }
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//                            }
+//                        });
+
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -69,19 +106,17 @@ public class BoardPlayMenuActivity extends AppCompatActivity {
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Intent intent = new Intent(BoardPlayMenuActivity.this, GameActivity.class);
-
-                                intent.putExtra("board", model);
+                                Intent intent = new Intent(BoardPlayMenuActivity.this, BoardPlaySelectActivity.class);
+//                                ImageView imageView3 = (ImageView) findViewById(R.id.row_imageview3);
+//                                imageView3.setImageResource(R.drawable.questionmarkblue);
+                                //intent.putExtra("board", model);
                                 intent.putExtra("key", boardKey);
-                                if (dataSnapshot.child("progress") != null)
-                                intent.putExtra("progress",
-                                        dataSnapshot.child("progress").getValue(String.class));
-                                if (dataSnapshot.child("time") != null )
-                                    intent.putExtra("time",
-                                            dataSnapshot.child("time").getValue(Integer.class));
-                                if (dataSnapshot.child("solved") != null)
-                                    intent.putExtra("solved",
-                                            dataSnapshot.child("solved").getValue(Boolean.class));
+//                                if (dataSnapshot.child("time") != null )
+//                                    intent.putExtra("time",
+//                                            dataSnapshot.child("time").getValue(Integer.class));
+//                                if (dataSnapshot.child("solved") != null)
+//                                    intent.putExtra("solved",
+//                                            dataSnapshot.child("solved").getValue(String.class));
 
                                 startActivity(intent);
                             }
