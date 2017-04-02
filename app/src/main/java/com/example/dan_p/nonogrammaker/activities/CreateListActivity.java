@@ -43,7 +43,6 @@ public class CreateListActivity extends AppCompatActivity {
 
         this.buttonCreateNewBoard = (Button) findViewById(R.id.button_create);
         this.mUserListView = (ListView)findViewById(R.id.createboardlist_listview);
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         this.mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl(Constants.FIREBASE_URL);
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -55,6 +54,8 @@ public class CreateListActivity extends AppCompatActivity {
                 TextView textViewCreator = (TextView) v.findViewById(R.id.textView_row_creator);
                 textViewCreator.setText(model.getCreatorEmail());
                 TextView textViewTag = (TextView) v.findViewById(R.id.textView_row_tag);
+                TextView textViewTime = (TextView) v.findViewById(R.id.textView_row_bestTime);
+                textViewTime.setText("");
                 textViewTag.setText(String.format("#%s", model.getTag()));
                 try {
                     GameBoard gameBoard0 = new GameBoard(model.getCells0());

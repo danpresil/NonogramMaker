@@ -140,8 +140,7 @@ public class CreateSelectActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new AlertDialog.Builder(CreateSelectActivity.this)
                         .setTitle("Upload board")
-                        .setMessage("You can't edit a board after you uploading it.\n" +
-                                "Are you sure you want to upload this board?")
+                        .setMessage("Are you sure you want to upload this board?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 uploadBoard();
