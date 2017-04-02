@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dan_p.nonogrammaker.R;
 import com.example.dan_p.nonogrammaker.database.Constants;
@@ -24,7 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardCreateMenuActivity extends AppCompatActivity {
+public class CreateListActivity extends AppCompatActivity {
+    private static final int COLOR_0 = 0xFF000000;
+    private static final int COLOR_1 = 0xFFC5C5C5;
+
     private final static int SIZE = 15;
 
     private Button buttonCreateNewBoard;
@@ -37,9 +39,9 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_created_boards_list);
+        setContentView(R.layout.activity_create_list);
 
-        this.buttonCreateNewBoard = (Button) findViewById(R.id.button_create_new_board);
+        this.buttonCreateNewBoard = (Button) findViewById(R.id.button_create);
         this.mUserListView = (ListView)findViewById(R.id.createboardlist_listview);
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         this.mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl(Constants.FIREBASE_URL);
@@ -57,19 +59,19 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
                 try {
                     GameBoard gameBoard0 = new GameBoard(model.getCells0());
                     ImageView imageView0 = (ImageView) v.findViewById(R.id.row_imageview0);
-                    imageView0.setImageBitmap(gameBoard0.createImage());
+                    imageView0.setImageBitmap(gameBoard0.createImage(COLOR_0, COLOR_1));
 
                     GameBoard gameBoard1 = new GameBoard(model.getCells1());
                     ImageView imageView1 = (ImageView) v.findViewById(R.id.row_imageview1);
-                    imageView1.setImageBitmap(gameBoard1.createImage());
+                    imageView1.setImageBitmap(gameBoard1.createImage(COLOR_0, COLOR_1));
 
                     GameBoard gameBoard2 = new GameBoard(model.getCells2());
                     ImageView imageView2 = (ImageView) v.findViewById(R.id.row_imageview2);
-                    imageView2.setImageBitmap(gameBoard2.createImage());
+                    imageView2.setImageBitmap(gameBoard2.createImage(COLOR_0, COLOR_1));
 
                     GameBoard gameBoard3 = new GameBoard(model.getCells3());
                     ImageView imageView3 = (ImageView) v.findViewById(R.id.row_imageview3);
-                    imageView3.setImageBitmap(gameBoard3.createImage());
+                    imageView3.setImageBitmap(gameBoard3.createImage(COLOR_0, COLOR_1));
                 } catch (BoardSizeException e) {
                     e.printStackTrace();
                 }
@@ -77,9 +79,7 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(BoardCreateMenuActivity.this, "Clicked on: " + position +
-                                model.getTag(), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(BoardCreateMenuActivity.this, BoardCreateSelectActivity.class);
+                        Intent intent = new Intent(CreateListActivity.this, CreateSelectActivity.class);
                         intent.putExtra("board", model);
                         intent.putExtra("key", firebaseListAdapterMyPuzzles.getRef(position).getKey());
                         startActivity(intent);
@@ -104,7 +104,7 @@ public class BoardCreateMenuActivity extends AppCompatActivity {
                 // The key to the new empty board
                 String key = writeNewBoard(emptyBoard, emptyBoard, emptyBoard, emptyBoard, tag, creator, creator_email);
 
-                Intent intent = new Intent(BoardCreateMenuActivity.this, BoardCreateSelectActivity.class);
+                Intent intent = new Intent(CreateListActivity.this, CreateSelectActivity.class);
                 intent.putExtra("board", newBoard);
                 intent.putExtra("key", key);
 

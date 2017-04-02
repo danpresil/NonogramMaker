@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameBoard {
+    private static final int COLOR_0 = 0xFF000000;
+    private static final int COLOR_1 = 0xFFC5C5C5;
+
     private int size;
     private Cell[][] cells;
     private ArrayList<Integer>[] rowNumbersLists;
@@ -147,6 +150,10 @@ public class GameBoard {
     }
 
     public Bitmap createImage() {
+        return createImage(COLOR_0, COLOR_1);
+    }
+
+    public Bitmap createImage(int color0, int color1) {
         int width = getSize();
         int height = getSize();
         int[] pixels = new int[width * height];
@@ -156,9 +163,9 @@ public class GameBoard {
             for (int j = 0; j < height; j++)
             {
                 if (this.cells[i][j].getCellState() == CellState.BLACK)
-                    pixels[pixelsIndex] = 0xff00304e;
+                    pixels[pixelsIndex] = color0;
                 else
-                    pixels[pixelsIndex] = 0xffa9a9a9;
+                    pixels[pixelsIndex] = color1;
                 pixelsIndex ++;
             }
         }
@@ -200,7 +207,7 @@ public class GameBoard {
                 }
             }
             isChanged = true;
-            updateSolutionNumbers(); //TODO can be row/column specific
+            updateSolutionNumbers();
         }
 
         return isChanged;

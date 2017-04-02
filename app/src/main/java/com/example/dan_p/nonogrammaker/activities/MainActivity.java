@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
                 if (firebaseUser != null) {
-                    Toast.makeText(MainActivity.this, "you are signed in as" + firebaseUser.getUid(), Toast.LENGTH_SHORT).show();
                     linearLayoutLoggedOut.setVisibility(View.GONE);
                     linearLayoutLoggedIn.setVisibility(View.VISIBLE);
 
@@ -64,36 +63,11 @@ public class MainActivity extends AppCompatActivity {
                     textViewLoginInfo.setText(String.format("Signed in as : %s", userInfo));
 
                 } else {
-                    Toast.makeText(MainActivity.this, "signed out", Toast.LENGTH_SHORT).show();
                     linearLayoutLoggedOut.setVisibility(View.VISIBLE);
                     linearLayoutLoggedIn.setVisibility(View.GONE);
                 }
             }
         };
-    }
-
-    private void registerWithEmailAndPassword() {
-        final String email = loginUserId.getText().toString().trim().toLowerCase();
-        final String password = loginUserPassword.getText().toString().trim();
-
-        progressDialog.setMessage("Signing in...");
-        progressDialog.show();
-
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.cancel();
-
-                        Log.d(TAG, "createUserWithEmailAndPassword:onComplete:" + task.isSuccessful());
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "createUserWithEmailAndPassword", task.getException());
-                            Toast.makeText(MainActivity.this, "User creation failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     @Override
@@ -114,26 +88,55 @@ public class MainActivity extends AppCompatActivity {
         final String email = loginUserId.getText().toString().trim().toLowerCase();
         final String password = loginUserPassword.getText().toString().trim();
 
-        progressDialog.setMessage("Signing in...");
-        progressDialog.show();
+        if (password.length() < 6)
+            Toast.makeText(this, "The password has to be at least 6 digits long",
+                    Toast.LENGTH_SHORT).show();
+        else {
+            progressDialog.setMessage("Signing in...");
+            progressDialog.show();
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.cancel();
 
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.cancel();
-
-                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "signInWithEmail", task.getException());
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
+    private void registerWithEmailAndPassword() {
+        final String email = loginUserId.getText().toString().trim().toLowerCase();
+        final String password = loginUserPassword.getText().toString().trim();
+
+        if (password.length() < 6)
+            Toast.makeText(this, "The password has to be at least 6 digits long",
+                    Toast.LENGTH_SHORT).show();
+        else {
+            progressDialog.setMessage("Signing in...");
+            progressDialog.show();
+
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.cancel();
+
+                            Log.d(TAG, "createUserWithEmailAndPassword:onComplete:" + task.isSuccessful());
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "createUserWithEmailAndPassword", task.getException());
+                            }
+                        }
+                    });
+        }
+
+    }
 
 
     private void setOnClickListeners() {

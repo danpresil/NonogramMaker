@@ -9,9 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.dan_p.nonogrammaker.activities.BoardCreateActivity"
+    tools:context="com.example.dan_p.nonogrammaker.activities.CreateBoardActivity"
     android:gravity="center_vertical"
-    android:background="@drawable/background111">
+    android:background="@drawable/backgroundcreate">
 
     <TextView
         android:fontFamily="sans-serif-condensed"
@@ -23,7 +23,8 @@
         android:textAlignment="center"
         android:textSize="55sp"
         android:layout_alignParentTop="false"
-        android:textColor="@color/bodyTextColor" />
+        android:textColor="@color/bodyTextColor"
+        android:background="#AAffc560" />
 
     <LinearLayout
         android:orientation="horizontal"

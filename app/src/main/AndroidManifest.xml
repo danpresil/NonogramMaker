@@ -20,25 +20,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.GameActivity"
+            android:name=".activities.PlayBoardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.BoardCreateSelectActivity"
+            android:name=".activities.CreateSelectActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.BoardPlaySelectActivity"
+            android:name=".activities.PlaySelectActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.BoardPlayMenuActivity"
+            android:name=".activities.PlayListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.BoardCreateMenuActivity"
+            android:name=".activities.CreateListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.BoardCreateActivity"
+            android:name=".activities.CreateBoardActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.MenuActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ProgressActivity"
             android:screenOrientation="portrait" />
     </application>
 

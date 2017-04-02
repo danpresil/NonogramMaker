@@ -8,11 +8,11 @@
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activities.GameActivity"
+    tools:context=".activities.PlayBoardActivity"
     android:id="@+id/relativelayout_activity_game"
     android:orientation="vertical"
     android:baselineAligned="false"
-    android:background="#6d7b84">
+    android:background="@drawable/backgroundplay">
 
     <LinearLayout
         android:orientation="vertical"
@@ -32,23 +32,11 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text=""
-                android:id="@+id/text_mines_left"
-                android:layout_weight="1"
-                android:textColor="#ffffff"
-                android:textAlignment="center"
-                android:background="#4b5a63"
-                android:layout_marginRight="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=""
                 android:id="@+id/text_current_time"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:background="#4b5a63" />
+                android:textColor="@android:color/black"
+                android:background="#DDff7660" />
 
         </LinearLayout>
 
@@ -67,12 +55,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:useDefaultMargins="false"
-                android:background="#26FFFFFF">
+                android:background="#DDff7660">
 
                 <TextView
                     android:maxLines="15"
                     android:textSize="10sp"
-                    android:text="x"
                     android:id="@+id/blank_cell"
                     android:textAlignment="center" />
                 <TextView
@@ -1694,27 +1681,36 @@
                 android:layout_weight="0">
 
                 <RadioButton
-                    android:background="@drawable/unmarkradiobutton"
+                    android:background="@drawable/markradiobutton"
                     android:button="@android:color/transparent"
                     android:id="@+id/flag_button"
                     android:layout_below="@+id/game_grid"
                     android:layout_weight="0"
                     android:singleLine="false"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="10dp"
                     android:layout_width="150dp"
                     android:textAlignment="center"
-                    android:textSize="10sp"
-                    android:layout_height="75dp" />
+                    android:layout_height="75dp"
+                    android:text="X"
+                    android:textSize="40sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="#AAFFFFFF" />
 
                 <RadioButton
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentRight="false"
 
                     android:id="@+id/mine_button"
                     android:layout_weight="0"
                     android:background="@drawable/markradiobutton"
                     android:layout_width="150dp"
                     android:button="@android:color/transparent"
-                    android:layout_height="75dp" />
+                    android:layout_height="75dp"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="center"
+                    android:textSize="40sp"
+                    android:text="■"
+                    android:textStyle="normal|bold"
+                    android:textColor="#AAFFFFFF" />
 
             </RadioGroup>
 

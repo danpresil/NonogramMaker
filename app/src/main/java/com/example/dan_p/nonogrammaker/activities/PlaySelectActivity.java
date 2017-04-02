@@ -5,11 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dan_p.nonogrammaker.R;
 import com.example.dan_p.nonogrammaker.database.BoardEntry;
 import com.example.dan_p.nonogrammaker.database.Constants;
+import com.example.dan_p.nonogrammaker.database.ProgressEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,9 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class BoardPlaySelectActivity extends AppCompatActivity {
-    private static final int color0 = 0xffa9a9a9;
-    private static final int color1 = 0xff00304e;
+public class PlaySelectActivity extends AppCompatActivity {
+    private static final int COLOR_0 = 0xFF000000;
+    private static final int COLOR_1 = 0xFFC5C5C5;
 
     private ImageView imageView0;
     private ImageView imageView1;
@@ -30,22 +32,16 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
     private String boardKey;
     private BoardEntry boardEntry;
 
-    private String progress0;
-    private String progress1;
-    private String progress2;
-    private String progress3;
-    private int time;
-    private String solved;
+    private ProgressEntry progressEntry;
 
     private DatabaseReference mRootRef;
-    private DatabaseReference mBoardsRef;
 
     private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board_play_select);
+        setContentView(R.layout.activity_play_select);
 
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         this.mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl(Constants.FIREBASE_URL);
@@ -61,8 +57,8 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        this.mBoardsRef = this.mRootRef.child("boards").child(boardKey);
-        this.mBoardsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference mBoardsRef = this.mRootRef.child("boards").child(boardKey);
+        mBoardsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -76,34 +72,16 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
 
                     boardEntry = new BoardEntry(cells0, cells1, cells2, cells3, tag, creatorId, creatorEmail);
 
-                    mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
+                    mRootRef.child("progression").child(firebaseUser.getUid()).child(boardKey)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    if (dataSnapshot.exists()){
-                                    if (dataSnapshot.child("progress0").getValue() != null)
-                                        progress0 = dataSnapshot.child("progress0").getValue(String.class);
-                                    if (dataSnapshot.child("progress0") != null)
-                                        progress1 = dataSnapshot.child("progress1").getValue(String.class);
-                                    if (dataSnapshot.child("progress0").getValue() != null)
-                                        progress2 = dataSnapshot.child("progress2").getValue(String.class);
-                                    if (dataSnapshot.child("progress0").getValue() != null)
-                                        progress3 = dataSnapshot.child("progress3").getValue(String.class);
-                                    if (dataSnapshot.child("time").getValue() != null)
-                                        time = dataSnapshot.child("time").getValue(Integer.class);
-                                    if (dataSnapshot.child("solved").getValue() != null)
-                                        solved = dataSnapshot.child("solved").getValue(String.class);
-                                    else
-                                        solved = "0000";
+                                    progressEntry = dataSnapshot
+                                            .getValue(ProgressEntry.class);
 
                                     findViewsById();
                                     setImages();
                                     setActionListeners();
-//                                    } else {
-//                                        Toast.makeText(BoardPlaySelectActivity.this,
-//                                                "Failed to fetch progress", Toast.LENGTH_SHORT).show();
-//                                        finish();
-//                                    }
                                 }
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
@@ -111,7 +89,7 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
                             });
                 }
                 else {
-                    Toast.makeText(BoardPlaySelectActivity.this,
+                    Toast.makeText(PlaySelectActivity.this,
                             "Failed to fetch data", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -132,44 +110,54 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
 
     private void setImages() {
         if (this.imageView0 != null)
-            if (this.solved.charAt(0) == '1')
-                this.imageView0.setImageBitmap(boardEntry.createImage0(color0, color1));
+            if (this.progressEntry != null && this.progressEntry.getSolved().charAt(0) == '1')
+                this.imageView0.setImageBitmap(boardEntry.createImage0(COLOR_0, COLOR_1));
             else
-                this.imageView0.setImageResource(R.drawable.questionmarkblue);
+                this.imageView0.setImageResource(R.drawable.questionmarkred);
 
         if (this.imageView1 != null)
-            if (this.solved.charAt(1) == '1')
-                this.imageView1.setImageBitmap(boardEntry.createImage1(color0, color1));
+            if (this.progressEntry != null && this.progressEntry.getSolved().charAt(1) == '1')
+                this.imageView1.setImageBitmap(boardEntry.createImage1(COLOR_0, COLOR_1));
             else
-                this.imageView1.setImageResource(R.drawable.questionmarkblue);
+                this.imageView1.setImageResource(R.drawable.questionmarkred);
 
         if (this.imageView2 != null)
-            if (this.solved.charAt(2) == '1')
-                this.imageView2.setImageBitmap(boardEntry.createImage2(color0, color1));
+            if (this.progressEntry != null && this.progressEntry.getSolved().charAt(2) == '1')
+                this.imageView2.setImageBitmap(boardEntry.createImage2(COLOR_0, COLOR_1));
             else
-                this.imageView2.setImageResource(R.drawable.questionmarkblue);
+                this.imageView2.setImageResource(R.drawable.questionmarkred);
 
         if (this.imageView3 != null)
-            if (this.solved.charAt(3) == '1')
-                this.imageView3.setImageBitmap(boardEntry.createImage3(color0, color1));
+            if (this.progressEntry != null && this.progressEntry.getSolved().charAt(3) == '1')
+                this.imageView3.setImageBitmap(boardEntry.createImage3(COLOR_0, COLOR_1));
             else
-                this.imageView3.setImageResource(R.drawable.questionmarkblue);
+                this.imageView3.setImageResource(R.drawable.questionmarkred);
+
+        TextView textViewTime = (TextView) findViewById(R.id.textView5);
+        if (this.progressEntry != null && progressEntry.getTime() != -1)
+            textViewTime.setText(String.format("Time: %d", progressEntry.getTime()));
+        else
+            textViewTime.setText("");
+
+        TextView textViewInfo = (TextView) findViewById(R.id.textView2);
+        textViewInfo.setText("Tag: " + boardEntry.getTag() + "\nCreated by: " + boardEntry.getCreatorEmail());
+
     }
 
     private void setActionListeners() {
         this.imageView0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BoardPlaySelectActivity.this, GameActivity.class);
+                Intent intent = new Intent(PlaySelectActivity.this, PlayBoardActivity.class);
 
                 intent.putExtra("board", boardEntry);
                 intent.putExtra("key", boardKey);
-                if (progress0 != null)
-                    intent.putExtra("progress", progress0);
-                if (time != -1 )
-                    intent.putExtra("time", time);
-                if (solved != null)
-                    intent.putExtra("solved", solved);
+                if (progressEntry != null && progressEntry.getProgress0() != null)
+                    intent.putExtra("progress", progressEntry.getProgress0());
+                if (progressEntry != null && progressEntry.getTime() != -1 )
+                    intent.putExtra("time", progressEntry.getTime());
+                if (progressEntry != null && progressEntry.getSolved() != null)
+                    intent.putExtra("solved", progressEntry.getSolved());
                 intent.putExtra("position", 0);
 
                 startActivity(intent);
@@ -179,16 +167,16 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
         this.imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BoardPlaySelectActivity.this, GameActivity.class);
+                Intent intent = new Intent(PlaySelectActivity.this, PlayBoardActivity.class);
 
                 intent.putExtra("board", boardEntry);
                 intent.putExtra("key", boardKey);
-                if (progress1 != null)
-                    intent.putExtra("progress", progress1);
-                if (time != -1 )
-                    intent.putExtra("time", time);
-                if (solved != null)
-                    intent.putExtra("solved", solved);
+                if (progressEntry != null && progressEntry.getProgress1() != null)
+                    intent.putExtra("progress", progressEntry.getProgress1());
+                if (progressEntry != null && progressEntry.getTime() != -1 )
+                    intent.putExtra("time", progressEntry.getTime());
+                if (progressEntry != null && progressEntry.getSolved() != null)
+                    intent.putExtra("solved", progressEntry.getSolved());
                 intent.putExtra("position", 1);
 
                 startActivity(intent);
@@ -198,16 +186,16 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
         this.imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BoardPlaySelectActivity.this, GameActivity.class);
+                Intent intent = new Intent(PlaySelectActivity.this, PlayBoardActivity.class);
 
                 intent.putExtra("board", boardEntry);
                 intent.putExtra("key", boardKey);
-                if (progress2 != null)
-                    intent.putExtra("progress", progress2);
-                if (time != -1 )
-                    intent.putExtra("time", time);
-                if (solved != null)
-                    intent.putExtra("solved", solved);
+                if (progressEntry != null && progressEntry.getProgress2() != null)
+                    intent.putExtra("progress", progressEntry.getProgress2());
+                if (progressEntry != null && progressEntry.getTime() != -1 )
+                    intent.putExtra("time", progressEntry.getTime());
+                if (progressEntry != null && progressEntry.getSolved() != null)
+                    intent.putExtra("solved", progressEntry.getSolved());
                 intent.putExtra("position", 2);
 
                 startActivity(intent);
@@ -217,16 +205,16 @@ public class BoardPlaySelectActivity extends AppCompatActivity {
         this.imageView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BoardPlaySelectActivity.this, GameActivity.class);
+                Intent intent = new Intent(PlaySelectActivity.this, PlayBoardActivity.class);
 
                 intent.putExtra("board", boardEntry);
                 intent.putExtra("key", boardKey);
-                if (progress3 != null)
-                    intent.putExtra("progress", progress3);
-                if (time != -1 )
-                    intent.putExtra("time", time);
-                if (solved != null)
-                    intent.putExtra("solved", solved);
+                if (progressEntry != null && progressEntry.getProgress3() != null)
+                    intent.putExtra("progress", progressEntry.getProgress3());
+                if (progressEntry != null && progressEntry.getTime() != -1 )
+                    intent.putExtra("time", progressEntry.getTime());
+                if (progressEntry != null && progressEntry.getSolved() != null)
+                    intent.putExtra("solved", progressEntry.getSolved());
                 intent.putExtra("position", 3);
 
                 startActivity(intent);

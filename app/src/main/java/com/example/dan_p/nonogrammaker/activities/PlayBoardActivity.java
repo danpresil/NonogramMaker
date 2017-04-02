@@ -1,10 +1,9 @@
 package com.example.dan_p.nonogrammaker.activities;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -35,9 +34,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class PlayBoardActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
-    public static GameActivity gameActivity;
+    public static PlayBoardActivity playBoardActivity;
 
     private RelativeLayout relativeLayout;
     private GameLogic gameLogic;
@@ -46,13 +45,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView[] rowTextViews;
     private TextView[] columnTextViews;
     private RadioGroup actionsGroup;
-    private TextView textViewNumberOfMinesLeft;
     private TextView textViewBestTime;
     private Thread timer;
 
-    private static final String TAG = GameActivity.class.getSimpleName();
+    private static final String TAG = PlayBoardActivity.class.getSimpleName();
 
-    private CellImage touchedCellImage;
     private CellImage clickedOnCellImage;
     private String boardKey;
     private String isSolved;
@@ -68,8 +65,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_15x15);
-        gameActivity = this;
+        setContentView(R.layout.activity_play_board);
+        playBoardActivity = this;
 
         cellRecourceMap = createCellResourcesMap();
 
@@ -80,34 +77,39 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         getViewsById();
         updateNumberTextViews();
 
-        //TODO start time only if its the first game
-        this.startTime = gameLogic.getTime();
-        this.timer = new Thread(new GameTimer());
-        this.timer.start();
-//        if (this.isSolved) {
-//            this.textViewBestTime.setText("Your best time is : " + this.startTime);
-//        } else {
-            //timer.start();
-            this.textViewBestTime.setText("Time : " + this.startTime);
-      //  }
+        if (this.isSolved.charAt(this.position) == '1') {
+            if (this.isSolved.compareTo("1111") == 0)
+                this.textViewBestTime.setText("SOLVED");
+            else
+                this.textViewBestTime.setText("SOLVED");
+        } else {
+            this.timer = new Thread(new GameTimer());
+            this.timer.start();
+            this.gameLogic.setRunTimer(false);
+            this.gameLogic.setRunTimer(true);
+            this.textViewBestTime.setText("Time: " + startTime);
+        }
         updateCellImages();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        this.gameLogic.setRunTimer(true);
+    public void onStart() {
+        super.onStart();
+        if (this.isSolved.charAt(this.position) != '1') {
+            this.gameLogic.setRunTimer(false);
+            this.gameLogic.setRunTimer(true);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        this.gameLogic.setRunTimer(false);
-        // todo send progress
+        if (this.isSolved.charAt(this.position) != '1') {
+            this.gameLogic.setRunTimer(false);
+        }
         saveProgress();
     }
 
-    //TODO fix this method
     private GameLogic createGameLogic() {
         BoardEntry boardEntry = getIntent().getExtras().getParcelable("board");
         String cells = "";
@@ -127,7 +129,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     cells = boardEntry.getCells3();
                     break;
                 default:
-                    Toast.makeText(gameActivity,
+                    Toast.makeText(playBoardActivity,
                             "Failed to load position", Toast.LENGTH_SHORT).show();
                     finish();
             }
@@ -140,19 +142,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             return null;
 
         int time = getIntent().getIntExtra("time", 0);
+        this.startTime = time;
         String progress = getIntent().getStringExtra("progress");
         this.isSolved = getIntent().getStringExtra("solved");
         if (this.isSolved == null) {
             this.isSolved = "0000";
         }
 
-        //TODO get sloved intent
-
         GameLogic gameLogic = null;
         try {
             GameBoard gameBoard = new GameBoard(cells);
-            if (this.isSolved != null && this.isSolved.charAt(position) == '0' && progress != null) {
+            if (this.isSolved != null && this.isSolved.charAt(position) == '0') {
                 // Continue game using the solution progress
+                if (progress == null)
+                    progress = Utils.emptyBoardCells();
                 gameLogic = new GameLogic(gameBoard, new GameBoard(progress), time);
             } else {
                 // Start a new game
@@ -360,66 +363,50 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private void checkWin() {
         if (gameLogic.getGameState() == GameState.WON) {
-            PlayEndGameAnimation(GameState.WON);
-            this.isSolved = Utils.replaceChar(this.isSolved, position, '1');
-
             // Disable grid clicks
             for (int row = 0 ; row < this.gameLogic.getSize() ; row++ )
                 for (int column = 0 ; column < this.gameLogic.getSize() ; column++ )
                     cellImages[row][column].setEnabled(false);
 
             saveProgress();
+            this.isSolved = Utils.replaceChar(this.isSolved, position, '1');
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                }
-            }, 3000);
+            PlayEndGameAnimation(GameState.WON);
         }
     }
 
     private void PlayEndGameAnimation(GameState gameState) {
         if (gameState == GameState.WON) {
-            relativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorValue1));
-
+            //relativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorValue1));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("✓ TIME: " + gameLogic.getTime() + " ✓")
+                    .setCancelable(false)
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 
     private void saveProgress() {
         if (this.boardKey != null) {
             // Solution progress
-            mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
+            mRootRef.child("progression").child(firebaseUser.getUid()).child(boardKey)
                     .child("progress"+position).setValue(this.gameLogic.getGameGrid().getCellsAsString());
-            Toast.makeText(gameActivity, "pos="+position, Toast.LENGTH_SHORT).show();
-//            if (!isSolved) {
-            // Game time
-            mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
-                    .child("time").setValue(this.gameLogic.getTime());
+
+            // Update time only if this board hasn't been solved yet
+            if (isSolved.charAt(position) != '1') {
+                // Game time
+                mRootRef.child("progression").child(firebaseUser.getUid()).child(boardKey)
+                        .child("time").setValue(this.gameLogic.getTime());
+            }
 
             // Game status: in progress / solved
-            mRootRef.child("progression").child(boardKey).child(firebaseUser.getUid())
+            mRootRef.child("progression").child(firebaseUser.getUid()).child(boardKey)
                     .child("solved").setValue(isSolved);
-
-//            }
-
-            ///////
-
-
-//            // Solution progress
-//            mRootRef.child("boards").child(boardKey).child("progression").child(firebaseUser.getUid())
-//                    .child("progress"+position).setValue(this.gameLogic.getGameGrid().getCellsAsString());
-//            Toast.makeText(gameActivity, "pos="+position, Toast.LENGTH_SHORT).show();
-////            if (!isSolved) {
-//            // Game time
-//            mRootRef.child("boards").child(boardKey).child("progression").child(firebaseUser.getUid())
-//                    .child("time").setValue(this.gameLogic.getTime());
-//
-//            // Game status: in progress / solved
-//            mRootRef.child("boards").child(boardKey).child("progression").child(firebaseUser.getUid())
-//                    .child("solved").setValue(isSolved);
-
-//            }
         }
     }
 
@@ -430,12 +417,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             int row = cellImage.getRow();
             int column = cellImage.getColumn();
 
-            int highlightImageId = cellRecourceMap.get("highlight");
-
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    //rowTextViews[row].setBackgroundColor(Color.RED);
-                    //columnTextViews[column].setBackgroundColor(Color.RED);
                     for (int r = 0 ; r < gameLogic.getSize() ; r++)
                         cellImages[r][column].setColorFilter(Color.parseColor("#4DFFFFFF"), PorterDuff.Mode.SRC_ATOP);
 
@@ -444,8 +427,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    //rowTextViews[row].setBackgroundColor(0x00000000);
-                    //columnTextViews[column].setBackgroundColor(0x00000000);
                     updateCellImage(row, column);
 
                     for (int r = 0 ; r < gameLogic.getSize() ; r++)

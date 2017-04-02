@@ -14,47 +14,57 @@ import com.google.firebase.auth.FirebaseUser;
 public class MenuActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+    private String email;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
         TextView textViewId = (TextView) findViewById(R.id.textView_user_login_id);
 
         this.firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = this.firebaseAuth.getCurrentUser();
+        final FirebaseUser firebaseUser = this.firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
-            textViewId.setText(String.format("Logged in as %s", firebaseUser.getEmail()));
+            this.email = firebaseUser.getEmail();
+            this.uid = firebaseUser.getUid();
+            textViewId.setText(String.format("Logged in as %s", email));
         }
 
-        Button buttonNewGame = (Button) findViewById(R.id.button_board_list);
-        if (buttonNewGame != null) {
-            buttonNewGame.setOnClickListener(new View.OnClickListener() {
+        Button buttonPlay = (Button) findViewById(R.id.button_play);
+        if (buttonPlay != null) {
+            buttonPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MenuActivity.this, BoardPlayMenuActivity.class);
-                    //TODO sent list
-                    //Bundle bundle = new Bundle();
-                    //intent.putExtras(bundle);
+                    Intent intent = new Intent(MenuActivity.this, PlayListActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("uid", uid);
                     startActivity(intent);
                 }
             });
         }
 
-        Button buttonToAllResults = (Button) findViewById(R.id.button_create_new_board);
-        if (buttonToAllResults != null) {
-            buttonToAllResults.setOnClickListener(new View.OnClickListener() {
+        Button buttonCreate = (Button) findViewById(R.id.button_create);
+        if (buttonCreate != null) {
+            buttonCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MenuActivity.this, BoardCreateMenuActivity.class);
-//TODO send list
-//                    Bundle bundle = new Bundle();
-//                    intent.putExtras(bundle);
+                    Intent intent = new Intent(MenuActivity.this, CreateListActivity.class);
                     startActivity(intent);
                 }
             });
         }
 
+        Button buttonProgress = (Button) findViewById(R.id.button_progression);
+        buttonProgress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MenuActivity.this, ProgressActivity.class);
+                intent.putExtra("email", email);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
+            }
+        });
     }
 }

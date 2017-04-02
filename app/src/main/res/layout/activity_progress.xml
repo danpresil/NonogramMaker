@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_progress"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.dan_p.nonogrammaker.activities.ProgressActivity"
+    android:background="@drawable/backgroundmain"
+    android:gravity="center_vertical|center_horizontal">
+
+    <TextView
+        android:text="uid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewUserInfo"
+        android:background="#AAFFFFFF"
+        android:textAlignment="center"
+        android:padding="20dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="24sp"
+        android:textColor="#FF000000" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#AAFFFFFF"
+        android:gravity="center"
+        android:layout_below="@+id/textViewUserInfo"
+        android:padding="5dp">
+
+        <TextView
+            android:text="Boards solved: 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStats0"
+            android:layout_weight="1"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24sp"
+            android:textColor="#FF000000" />
+
+        <TextView
+            android:text="Boards available online: 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStats1"
+            android:layout_weight="1"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24sp"
+            android:textColor="#FF000000" />
+
+        <TextView
+            android:text="Progress: 0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStats2"
+            android:layout_weight="1"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24sp"
+            android:textColor="#FF000000" />
+
+        <TextView
+            android:text="Boards created: 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStats3"
+            android:layout_weight="1"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24sp"
+            android:textColor="#FF000000" />
+
+        <TextView
+            android:text="Boards uploaded: 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStats4"
+            android:layout_weight="1"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24sp"
+            android:textColor="#FF000000" />
+    </LinearLayout>
+</RelativeLayout>

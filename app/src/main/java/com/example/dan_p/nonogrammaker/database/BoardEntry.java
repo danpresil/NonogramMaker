@@ -186,10 +186,10 @@ public class BoardEntry implements Parcelable{
 
         int[] pixels = new int[size];
         for (int i = 0 ; i < size ; i ++) {
-            if (cells.charAt(i) == '0')
-                pixels[i] = color0;//0xffa9a9a9;
+            if (cells.charAt(i) == '1')
+                pixels[i] = color0;
             else
-                pixels[i] = color1;//0xff00304e;
+                pixels[i] = color1;
         }
 
         int squaredSize = (int)Math.sqrt(size);

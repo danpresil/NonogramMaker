@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardCreateActivity extends AppCompatActivity implements View.OnClickListener{
+public class CreateBoardActivity extends AppCompatActivity implements View.OnClickListener{
 
     private final int NUMBER_OF_CELLS = 225;
     private final int SIZE = 15;
@@ -34,8 +34,6 @@ public class BoardCreateActivity extends AppCompatActivity implements View.OnCli
     private EditText editTextTag;
     private int position;
     private String boardKey;
-//    private String boardCreatorId;
-//    private String boardCreatorEmail;
     private BoardEntry boardEntry;
 
     private DatabaseReference mRootRef;

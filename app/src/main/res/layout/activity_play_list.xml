@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_board_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:screenOrientation="portrait"
+    tools:context="com.example.dan_p.nonogrammaker.activities.PlayListActivity"
+    android:background="@drawable/backgroundplay">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/boardlist_top_buttons">
+
+    </LinearLayout>
+
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchview_filter"
+        android:layout_below="@+id/boardlist_bottom_buttons"
+        android:background="#4DFFFFFF"
+        app:defaultQueryHint="Enter filter here"
+        android:layout_marginBottom="20dp"
+        app:queryHint="Enter filter here" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/boardlist_listview"
+        android:layout_below="@+id/searchview_filter"
+        android:background="#4DFFFFFF" />
+</RelativeLayout>
