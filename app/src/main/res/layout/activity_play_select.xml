@@ -14,7 +14,6 @@
     android:background="@drawable/backgroundplay">
 
     <TextView
-        android:text="textView5"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
@@ -27,7 +26,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:text="textView2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
@@ -50,31 +48,31 @@
         android:background="#4DFFFFFF">
 
         <ImageView
-            android:layout_height="150dp"
             app:srcCompat="@drawable/cell0"
             android:id="@+id/imageViewPlay0"
-            android:layout_width="150dp"
-            android:padding="2dp" />
+            android:layout_width="@dimen/img_size"
+            android:padding="2dp"
+            android:layout_height="@dimen/img_size" />
 
         <ImageView
-            android:layout_height="150dp"
+            android:layout_height="@dimen/img_size"
             app:srcCompat="@drawable/cell0"
             android:id="@+id/imageViewPlay1"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/img_size"
             android:padding="2dp" />
 
         <ImageView
-            android:layout_height="150dp"
+            android:layout_height="@dimen/img_size"
             app:srcCompat="@drawable/cell0"
             android:id="@+id/imageViewPlay2"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/img_size"
             android:padding="2dp" />
 
         <ImageView
-            android:layout_height="150dp"
+            android:layout_height="@dimen/img_size"
             app:srcCompat="@drawable/cell0"
             android:id="@+id/imageViewPlay3"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/img_size"
             android:padding="2dp" />
     </GridLayout>
 </RelativeLayout>

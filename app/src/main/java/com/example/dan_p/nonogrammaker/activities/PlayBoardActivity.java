@@ -175,7 +175,7 @@ public class PlayBoardActivity extends AppCompatActivity implements View.OnClick
         this.rowTextViews = getRowTextViewsFromView();
         this.columnTextViews = getColumnTextViewsFromView();
         this.actionsGroup = (RadioGroup) findViewById(R.id.radio_group_actions);
-        this.actionsGroup.check(R.id.mine_button);
+        this.actionsGroup.check(R.id.button_black);
         this.relativeLayout = (RelativeLayout)findViewById(R.id.relativelayout_activity_game);
         this.textViewBestTime = (TextView) findViewById(R.id.text_current_time);
     }
@@ -445,10 +445,10 @@ public class PlayBoardActivity extends AppCompatActivity implements View.OnClick
         if (v instanceof CellImage) {
             this.clickedOnCellImage = (CellImage)v;
             switch (actionsGroup.getCheckedRadioButtonId()) {
-                case R.id.mine_button:
+                case R.id.button_black:
                     gameLogic.makeMove(CellState.BLACK, clickedOnCellImage.getRow(), clickedOnCellImage.getColumn());
                     break;
-                case R.id.flag_button:
+                case R.id.button_x:
                     gameLogic.makeMove(CellState.X, clickedOnCellImage.getRow(), clickedOnCellImage.getColumn());
                     break;
             }

@@ -49,11 +49,7 @@ public class CreateBoardActivity extends AppCompatActivity implements View.OnCli
         BoardEntry boardEntry = getIntent().getExtras().getParcelable("board");
         if (boardEntry != null) {
             this.boardEntry = boardEntry;
-//            boardCells0 = boardEntry.getCells();
-//            this.boardCreatorId = boardEntry.getCreatorId();
-//            this.boardCreatorEmail = boardEntry.getCreatorEmail();
             this.editTextTag.setText(this.boardEntry.getTag());
-//            this.position = boardEntry.getPositon();
         }
         else {
             finish();

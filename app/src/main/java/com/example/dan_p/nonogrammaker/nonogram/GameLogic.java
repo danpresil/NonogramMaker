@@ -10,19 +10,19 @@ public class GameLogic {
     private int time;
 
     private GameBoard gameBoardSolution;
-    private GameBoard gameBoard;
+    private GameBoard gameBoardProgress;
 
-    public GameLogic(GameBoard gameBoard) {
-        this(gameBoard, null, 0);
+    public GameLogic(GameBoard gameBoardProgress) {
+        this(gameBoardProgress, null, 0);
     }
 
-    public GameLogic(GameBoard gameBoard, GameBoard gameBoardSavedProgress, final int gameTime){
+    public GameLogic(GameBoard gameBoardProgress, GameBoard gameBoardSavedProgress, final int gameTime){
         this.gameState = GameState.IN_PROGRESS;
-        this.gameBoardSolution = gameBoard;
+        this.gameBoardSolution = gameBoardProgress;
         if (gameBoardSavedProgress != null)
-            this.gameBoard = gameBoardSavedProgress;
+            this.gameBoardProgress = gameBoardSavedProgress;
         else
-            this.gameBoard = new GameBoard(gameBoardSolution.getSize());
+            this.gameBoardProgress = new GameBoard(gameBoardSolution.getSize());
 
         time = gameTime;
         timer = new Thread(new Runnable() {
@@ -46,8 +46,8 @@ public class GameLogic {
     }
 
     private boolean isInBounds(int row, int column) {
-        return (row >= 0 && row < this.gameBoard.getSize()) &&
-                (column >= 0 && column < this.gameBoard.getSize());
+        return (row >= 0 && row < this.gameBoardProgress.getSize()) &&
+                (column >= 0 && column < this.gameBoardProgress.getSize());
     }
 
     public ArrayList<Integer>[] getRowNumberListsArray() {
@@ -61,7 +61,7 @@ public class GameLogic {
     public GameState makeMove(CellState cellState, int row, int column) {
         if (isInBounds(row, column)) {
             this.gameState = GameState.IN_PROGRESS;
-            this.gameBoard.mark(cellState, row, column);
+            this.gameBoardProgress.mark(cellState, row, column);
         }
 
         if (checkWin()) {
@@ -72,15 +72,15 @@ public class GameLogic {
     }
 
     private boolean checkWin() {
-        return this.gameBoard.equals(this.gameBoardSolution);
+        return this.gameBoardProgress.equals(this.gameBoardSolution);
     }
 
     public int getSize() {
-        return this.gameBoard.getSize();
+        return this.gameBoardProgress.getSize();
     }
 
     public GameBoard getGameGrid() {
-        return gameBoard;
+        return gameBoardProgress;
     }
 
     public GameBoard getGameSolution() {

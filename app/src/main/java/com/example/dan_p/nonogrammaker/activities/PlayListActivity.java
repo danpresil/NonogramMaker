@@ -36,7 +36,6 @@ public class PlayListActivity extends AppCompatActivity {
     private SearchView searchView;
     private String filter = "";
     private Query firebaseQuery;
-    private String boardKey;
 
     private String email;
     private String userKey = "";
@@ -57,25 +56,6 @@ public class PlayListActivity extends AppCompatActivity {
         this.listViewBoards = (ListView)findViewById(R.id.boardlist_listview);
         this.mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl(Constants.FIREBASE_URL);
         queryProgression();
-
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance()
-                .getReferenceFromUrl(Constants.FIREBASE_URL);
-        mRootRef.child("progression").child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ProgressEntry userProgression = snapshot.getValue(ProgressEntry.class);
-                    String boardKey = snapshot.getKey();
-                    userProgressEntryHashMap.put(boardKey, userProgression);
-                }
-
-                createBoardList("");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
 
         SearchView sv = (SearchView) findViewById(R.id.searchview_filter);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -146,15 +126,12 @@ public class PlayListActivity extends AppCompatActivity {
                         ImageView imageView3 = (ImageView) v.findViewById(R.id.row_imageview3);
                         imageView3.setImageBitmap(model.createImage3(COLOR_0, COLOR_1));
                     }
-
-
-
                 }
 
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boardKey = firebaseListAdapter.getRef(position).getKey();
+                        String boardKey = firebaseListAdapter.getRef(position).getKey();
                         Intent intent = new Intent(PlayListActivity.this, PlaySelectActivity.class);
                         intent.putExtra("key", boardKey);
                         startActivity(intent);
@@ -176,6 +153,8 @@ public class PlayListActivity extends AppCompatActivity {
                     String boardKey = snapshot.getKey();
                     userProgressEntryHashMap.put(boardKey, userProgression);
                 }
+
+                createBoardList("");
             }
 
             @Override

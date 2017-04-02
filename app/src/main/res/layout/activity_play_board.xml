@@ -1683,7 +1683,7 @@
                 <RadioButton
                     android:background="@drawable/markradiobutton"
                     android:button="@android:color/transparent"
-                    android:id="@+id/flag_button"
+                    android:id="@+id/button_x"
                     android:layout_below="@+id/game_grid"
                     android:layout_weight="0"
                     android:singleLine="false"
@@ -1699,7 +1699,7 @@
                 <RadioButton
                     android:layout_alignParentRight="false"
 
-                    android:id="@+id/mine_button"
+                    android:id="@+id/button_black"
                     android:layout_weight="0"
                     android:background="@drawable/markradiobutton"
                     android:layout_width="150dp"
