@@ -1,18 +1,17 @@
 package com.example.dan_p.nonogrammaker.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dan_p.nonogrammaker.R;
-import com.example.dan_p.nonogrammaker.database.Constants;
 import com.example.dan_p.nonogrammaker.database.BoardEntry;
+import com.example.dan_p.nonogrammaker.database.Constants;
 import com.example.dan_p.nonogrammaker.database.ProgressEntry;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;

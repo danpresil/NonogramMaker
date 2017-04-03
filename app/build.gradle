@@ -1,9 +1,28 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
+    defaultConfig {
+        applicationId "com.example.dan_p.nonogrammaker"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        resConfigs "en"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            multiDexEnabled true
+//            shrinkResources true
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+//                    'proguard-rules.pro'
+        }
+    }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/DEPENDENCIES'
@@ -16,31 +35,13 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/notice.txt'
     }
-
-    defaultConfig {
-        applicationId "com.example.dan_p.nonogrammaker"
-        minSdkVersion 21
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.google.firebase:firebase-database:10.0.1'
-    compile 'com.firebaseui:firebase-ui:0.4.3'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
-    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.google.firebase:firebase-auth:10.0.0'
+    compile 'com.google.firebase:firebase-database:10.0.0'
+    compile 'com.firebaseui:firebase-ui:0.4.2'
 }
-
-
 
 apply plugin: 'com.google.gms.google-services'

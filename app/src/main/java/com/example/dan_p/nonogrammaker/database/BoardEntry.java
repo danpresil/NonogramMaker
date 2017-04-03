@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.dan_p.nonogrammaker.nonogram.CellState;
-import com.example.dan_p.nonogrammaker.nonogram.GameBoard;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;

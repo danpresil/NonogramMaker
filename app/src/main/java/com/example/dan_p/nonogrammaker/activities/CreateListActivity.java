@@ -1,8 +1,8 @@
 package com.example.dan_p.nonogrammaker.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,8 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dan_p.nonogrammaker.R;
-import com.example.dan_p.nonogrammaker.database.Constants;
 import com.example.dan_p.nonogrammaker.database.BoardEntry;
+import com.example.dan_p.nonogrammaker.database.Constants;
 import com.example.dan_p.nonogrammaker.nonogram.BoardSizeException;
 import com.example.dan_p.nonogrammaker.nonogram.GameBoard;
 import com.firebase.ui.database.FirebaseListAdapter;

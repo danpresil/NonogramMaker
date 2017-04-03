@@ -1,26 +1,20 @@
 package com.example.dan_p.nonogrammaker.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 
 import com.example.dan_p.nonogrammaker.R;
-import com.example.dan_p.nonogrammaker.database.Constants;
 import com.example.dan_p.nonogrammaker.database.BoardEntry;
+import com.example.dan_p.nonogrammaker.database.Constants;
 import com.example.dan_p.nonogrammaker.nonogram.BoardSizeException;
 import com.example.dan_p.nonogrammaker.nonogram.CellImage;
 import com.example.dan_p.nonogrammaker.nonogram.CellState;
 import com.example.dan_p.nonogrammaker.nonogram.GameBoard;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CreateBoardActivity extends AppCompatActivity implements View.OnClickListener{
 
